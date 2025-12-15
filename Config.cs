@@ -9,10 +9,10 @@ public class Config
     public string Mode { get; set; } = "sender";
 
     [JsonPropertyName("sendPort")]
-    public string SendPort { get; set; } = "COM3";
+    public string SendPort { get; set; } = "COM1";
 
     [JsonPropertyName("recvPort")]
-    public string RecvPort { get; set; } = "COM4";
+    public string RecvPort { get; set; } = "COM2";
 
     [JsonPropertyName("baud")]
     public int Baud { get; set; } = 115200;
