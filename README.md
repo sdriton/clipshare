@@ -195,7 +195,7 @@ ClipShare uses a simple binary protocol:
 
 1. **Clone the repository**
    ```bash
-   git clone YOUR_REPOSITORY_URL
+   git clone https://github.com/sdriton/clipshare.git
    cd clipshare-cs
    ```
 
