@@ -248,7 +248,3 @@ See [BUILD.md](BUILD.md) for detailed build instructions.
 ## License
 
 This project is provided as-is for educational and personal use.
-
-## Credits
-
-C# port of the original ClipShare Go implementation.
