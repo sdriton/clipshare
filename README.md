@@ -8,7 +8,8 @@ A Windows application for sharing clipboard content between computers over seria
 - 🔄 **Bidirectional clipboard sharing** - Send and receive clipboard text over serial ports
 - 🎯 **Global hotkey support** - Trigger clipboard send with customizable keyboard shortcuts (default: Ctrl+Shift+C)
 - 🔔 **Toast notifications** - Get notified when clipboard content is sent or received
-- 🎨 **System tray integration** - Runs quietly in the background with easy access via tray icon
+- � **Multi-language support** - English and French interface (easily extensible)
+- �🎨 **System tray integration** - Runs quietly in the background with easy access via tray icon
 - ⚙️ **Configurable settings** - Edit all settings via JSON config file
 - 📦 **Self-contained** - No .NET runtime installation required
 
@@ -42,6 +43,7 @@ Just run `clipshare.exe` - it will start in tray mode with a system tray icon.
 - **Mode Selection** - Choose Sender, Receiver, or Both
 - **Start/Stop** - Control sender and receiver independently
 - **Notifications** - Toggle toast notifications on/off
+- **Language** - Switch between English and French
 - **Edit Config** - Open configuration file in Notepad
 - **Reload Config** - Apply configuration changes without restart
 - **Exit** - Close the application
@@ -93,7 +95,8 @@ Configuration file is automatically created at: `%APPDATA%\ClipShare\config.json
   "delayMs": 200,
   "hotkey": "Ctrl+Shift+C",
   "notifications": true,
-  "previewChars": 100
+  "previewChars": 100,
+  "language": "en"
 }
 ```
 
@@ -114,6 +117,7 @@ Configuration file is automatically created at: `%APPDATA%\ClipShare\config.json
 - **hotkey** - Global hotkey combination (e.g., `Ctrl+Shift+C`, `Ctrl+Alt+V`)
 - **notifications** - `true` to show toast notifications, `false` to disable
 - **previewChars** - Maximum characters to show in notification preview
+- **language** - Interface language: `en` (English) or `fr` (French)
 
 ## How It Works
 

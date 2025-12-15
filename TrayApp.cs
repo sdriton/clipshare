@@ -17,6 +17,9 @@ public class TrayApp : ApplicationContext
     private ToolStripMenuItem _startReceiverItem = null!;
     private ToolStripMenuItem _stopReceiverItem = null!;
     private ToolStripMenuItem _notifToggleItem = null!;
+    private ToolStripMenuItem _languageItem = null!;
+    private ToolStripMenuItem _langEnglishItem = null!;
+    private ToolStripMenuItem _langFrenchItem = null!;
     private ToolStripMenuItem _editConfigItem = null!;
     private ToolStripMenuItem _reloadConfigItem = null!;
     private ToolStripMenuItem _exitItem = null!;
@@ -51,7 +54,7 @@ public class TrayApp : ApplicationContext
         // Create tray icon
         _trayIcon = new NotifyIcon
         {
-            Text = "ClipShare: Sender/Receiver over Serial",
+            Text = Localization.Get("TrayTooltip"),
             Visible = true,
             ContextMenuStrip = _contextMenu
         };
@@ -75,24 +78,30 @@ public class TrayApp : ApplicationContext
 
     private void BuildMenu()
     {
-        _statusItem = new ToolStripMenuItem("Status: stopped");
-        _modeSenderItem = new ToolStripMenuItem("Mode: Sender", null, OnModeSender) { CheckOnClick = false };
-        _modeReceiverItem = new ToolStripMenuItem("Mode: Receiver", null, OnModeReceiver) { CheckOnClick = false };
-        _modeBothItem = new ToolStripMenuItem("Mode: Both", null, OnModeBoth) { CheckOnClick = false };
+        _statusItem = new ToolStripMenuItem(Localization.Get("Status") + ": " + Localization.Get("StatusStopped"));
+        _modeSenderItem = new ToolStripMenuItem(Localization.Get("ModeSender"), null, OnModeSender) { CheckOnClick = false };
+        _modeReceiverItem = new ToolStripMenuItem(Localization.Get("ModeReceiver"), null, OnModeReceiver) { CheckOnClick = false };
+        _modeBothItem = new ToolStripMenuItem(Localization.Get("ModeBoth"), null, OnModeBoth) { CheckOnClick = false };
 
-        _startSenderItem = new ToolStripMenuItem("Start Sender", null, OnStartSender);
-        _stopSenderItem = new ToolStripMenuItem("Stop Sender", null, OnStopSender);
-        _startReceiverItem = new ToolStripMenuItem("Start Receiver", null, OnStartReceiver);
-        _stopReceiverItem = new ToolStripMenuItem("Stop Receiver", null, OnStopReceiver);
+        _startSenderItem = new ToolStripMenuItem(Localization.Get("StartSender"), null, OnStartSender);
+        _stopSenderItem = new ToolStripMenuItem(Localization.Get("StopSender"), null, OnStopSender);
+        _startReceiverItem = new ToolStripMenuItem(Localization.Get("StartReceiver"), null, OnStartReceiver);
+        _stopReceiverItem = new ToolStripMenuItem(Localization.Get("StopReceiver"), null, OnStopReceiver);
 
-        _notifToggleItem = new ToolStripMenuItem("Notifications", null, OnToggleNotifications)
+        _notifToggleItem = new ToolStripMenuItem(Localization.Get("Notifications"), null, OnToggleNotifications)
         {
             Checked = _config.Notifications
         };
 
-        _editConfigItem = new ToolStripMenuItem("Edit Config…", null, OnEditConfig);
-        _reloadConfigItem = new ToolStripMenuItem("Reload Config", null, OnReloadConfig);
-        _exitItem = new ToolStripMenuItem("Exit", null, OnExit);
+        _languageItem = new ToolStripMenuItem(Localization.Get("Language"));
+        _langEnglishItem = new ToolStripMenuItem("English", null, OnLanguageEnglish) { Checked = _config.Language == "en" };
+        _langFrenchItem = new ToolStripMenuItem("Français", null, OnLanguageFrench) { Checked = _config.Language == "fr" };
+        _languageItem.DropDownItems.Add(_langEnglishItem);
+        _languageItem.DropDownItems.Add(_langFrenchItem);
+
+        _editConfigItem = new ToolStripMenuItem(Localization.Get("EditConfig"), null, OnEditConfig);
+        _reloadConfigItem = new ToolStripMenuItem(Localization.Get("ReloadConfig"), null, OnReloadConfig);
+        _exitItem = new ToolStripMenuItem(Localization.Get("Exit"), null, OnExit);
 
         _contextMenu.Items.Add(_statusItem);
         _contextMenu.Items.Add(_modeSenderItem);
@@ -105,6 +114,7 @@ public class TrayApp : ApplicationContext
         _contextMenu.Items.Add(_stopReceiverItem);
         _contextMenu.Items.Add(new ToolStripSeparator());
         _contextMenu.Items.Add(_notifToggleItem);
+        _contextMenu.Items.Add(_languageItem);
         _contextMenu.Items.Add(_editConfigItem);
         _contextMenu.Items.Add(_reloadConfigItem);
         _contextMenu.Items.Add(new ToolStripSeparator());
@@ -135,12 +145,12 @@ public class TrayApp : ApplicationContext
     {
         var parts = new List<string>();
         if (_sender?.Started == true)
-            parts.Add($"Sender[{_config.SendPort}@{_config.Baud}] HK:{_hotkey.Label}");
+            parts.Add($"{Localization.Get("Sender")}[{_config.SendPort}@{_config.Baud}] {Localization.Get("HK")}:{_hotkey.Label}");
         if (_receiver?.Started == true)
-            parts.Add($"Receiver[{_config.RecvPort}@{_config.Baud}]");
+            parts.Add($"{Localization.Get("Receiver")}[{_config.RecvPort}@{_config.Baud}]");
 
-        var statusText = parts.Count == 0 ? "stopped" : string.Join(" | ", parts);
-        _statusItem.Text = $"Mode: {_config.Mode} | {statusText}";
+        var statusText = parts.Count == 0 ? Localization.Get("StatusStopped") : string.Join(" | ", parts);
+        _statusItem.Text = $"{Localization.Get("Mode")}: {_config.Mode} | {statusText}";
 
         // Update mode checkmarks
         _modeSenderItem.Checked = _config.Mode.Equals("sender", StringComparison.OrdinalIgnoreCase);
@@ -298,12 +308,55 @@ public class TrayApp : ApplicationContext
 
             // Apply mode
             ApplyMode(_config.Mode);
+            
+            // Refresh menu with new language
+            RefreshMenu();
             UpdateStatus();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"[TrayApp] Reload config error: {ex.Message}");
         }
+    }
+
+    private void OnLanguageEnglish(object? sender, EventArgs e)
+    {
+        _config.Language = "en";
+        Localization.CurrentLanguage = "en";
+        _config.Save();
+        RefreshMenu();
+        UpdateStatus();
+    }
+
+    private void OnLanguageFrench(object? sender, EventArgs e)
+    {
+        _config.Language = "fr";
+        Localization.CurrentLanguage = "fr";
+        _config.Save();
+        RefreshMenu();
+        UpdateStatus();
+    }
+
+    private void RefreshMenu()
+    {
+        _statusItem.Text = Localization.Get("Status") + ": " + Localization.Get("StatusStopped");
+        _modeSenderItem.Text = Localization.Get("ModeSender");
+        _modeReceiverItem.Text = Localization.Get("ModeReceiver");
+        _modeBothItem.Text = Localization.Get("ModeBoth");
+        _startSenderItem.Text = Localization.Get("StartSender");
+        _stopSenderItem.Text = Localization.Get("StopSender");
+        _startReceiverItem.Text = Localization.Get("StartReceiver");
+        _stopReceiverItem.Text = Localization.Get("StopReceiver");
+        _notifToggleItem.Text = Localization.Get("Notifications");
+        _languageItem.Text = Localization.Get("Language");
+        _editConfigItem.Text = Localization.Get("EditConfig");
+        _reloadConfigItem.Text = Localization.Get("ReloadConfig");
+        _exitItem.Text = Localization.Get("Exit");
+        
+        _langEnglishItem.Checked = _config.Language == "en";
+        _langFrenchItem.Checked = _config.Language == "fr";
+        
+        _trayIcon.Text = Localization.Get("TrayTooltip");
     }
 
     private void OnExit(object? sender, EventArgs e)

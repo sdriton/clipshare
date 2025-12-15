@@ -105,7 +105,7 @@ public class Receiver : IDisposable
                 {
                     try
                     {
-                        Console.WriteLine($"[Receiver] Processing received text: {text.Length} chars");
+                        Console.WriteLine(string.Format(Localization.Get("ReceiverProcessing"), text.Length));
                         var textToSet = text; // Capture for lambda
                         var staThread = new Thread(() =>
                         {
@@ -123,14 +123,14 @@ public class Receiver : IDisposable
                         staThread.Join();
 
                         var preview = NotificationHelper.PreviewText(text, _previewChars);
-                        Console.WriteLine($"[Receiver] About to show notification. Enabled: {_notifications}");
-                        NotificationHelper.Show(_notifications, "ClipShare – Received", $"{text.Length} chars ← {_portName}\n{preview}");
-                        Console.WriteLine($"[Receiver] Received {text.Length} chars; clipboard updated.");
+                        Console.WriteLine(string.Format(Localization.Get("ReceiverShowingNotif"), _notifications));
+                        NotificationHelper.Show(_notifications, Localization.Get("NotifReceived"), $"{text.Length} {Localization.Get("NotifChars")} ← {_portName}\n{preview}");
+                        Console.WriteLine(string.Format(Localization.Get("ReceiverReceived"), text.Length));
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"[Receiver] Clipboard write error: {ex.Message}");
-                        NotificationHelper.Show(_notifications, "ClipShare – Clipboard failed", $"Clipboard write error: {ex.Message}");
+                        Console.WriteLine(string.Format(Localization.Get("ReceiverClipboardError"), ex.Message));
+                        NotificationHelper.Show(_notifications, Localization.Get("NotifClipboardFailed"), string.Format(Localization.Get("ReceiverClipboardError"), ex.Message));
                     }
                 }
             }

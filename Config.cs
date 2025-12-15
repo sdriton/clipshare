@@ -29,6 +29,9 @@ public class Config
     [JsonPropertyName("previewChars")]
     public int PreviewChars { get; set; } = 100;
 
+    [JsonPropertyName("language")]
+    public string Language { get; set; } = "en";
+
     [JsonIgnore]
     public DateTime Timestamp { get; set; }
 
@@ -44,6 +47,7 @@ public class Config
             Hotkey = "Ctrl+Shift+C",
             Notifications = true,
             PreviewChars = 100,
+            Language = "en",
             Timestamp = DateTime.Now
         };
     }
@@ -75,6 +79,9 @@ public class Config
             var cfg = JsonSerializer.Deserialize<Config>(json) ?? Default();
             if (cfg.PreviewChars <= 0)
                 cfg.PreviewChars = 100;
+            if (string.IsNullOrEmpty(cfg.Language))
+                cfg.Language = "en";
+            Localization.CurrentLanguage = cfg.Language;
             cfg.Timestamp = DateTime.Now;
             return cfg;
         }

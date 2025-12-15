@@ -221,8 +221,8 @@ public class Sender : IDisposable
 
                 if (string.IsNullOrEmpty(text))
                 {
-                    Console.WriteLine("[Sender] Clipboard empty (no text).");
-                    NotificationHelper.Show(_notifications, "ClipShare – Nothing to send", "Clipboard contains no text.");
+                    Console.WriteLine(Localization.Get("SenderClipboardEmpty"));
+                    NotificationHelper.Show(_notifications, Localization.Get("NotifNothingToSend"), Localization.Get("NotifNoText"));
                     return;
                 }
 
@@ -230,13 +230,13 @@ public class Sender : IDisposable
                 _port?.Write(frame, 0, frame.Length);
 
                 var preview = NotificationHelper.PreviewText(text, _previewChars);
-                NotificationHelper.Show(_notifications, "ClipShare – Sent", $"{text.Length} chars → {_portName}\n{preview}");
-                Console.WriteLine($"[Sender] Sent {text.Length} chars ({frame.Length} bytes).");
+                NotificationHelper.Show(_notifications, Localization.Get("NotifSent"), $"{text.Length} {Localization.Get("NotifChars")} → {_portName}\n{preview}");
+                Console.WriteLine(string.Format(Localization.Get("SenderSent"), text.Length, frame.Length));
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Sender] Error: {ex.Message}");
-                NotificationHelper.Show(_notifications, "ClipShare – Send failed", $"Error: {ex.Message}");
+                Console.WriteLine(string.Format(Localization.Get("SenderError2"), ex.Message));
+                NotificationHelper.Show(_notifications, Localization.Get("NotifSendFailed"), string.Format(Localization.Get("SenderError2"), ex.Message));
             }
         });
     }
