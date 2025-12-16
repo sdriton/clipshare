@@ -51,9 +51,3 @@ dotnet publish -c Release -r win-x64 --self-contained false -p:PublishSingleFile
 2. **Installer** - Use the generated `.exe` from Inno Setup
 3. **Microsoft Store** - Package as MSIX (requires additional setup)
 
-## What's Included
-
-- ClipShare executable
-- Icon file
-- Configuration support (created on first run at `%APPDATA%\ClipShare\config.json`)
-- README documentation
