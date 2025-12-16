@@ -9,7 +9,7 @@ A Windows application for sharing clipboard content between computers over seria
 - 🎯 **Global hotkey support** - Trigger clipboard send with customizable keyboard shortcuts (default: Ctrl+Shift+C)
 - 🔔 **Toast notifications** - Get notified when clipboard content is sent or received
 - � **Multi-language support** - English and French interface (easily extensible)
-- �🎨 **System tray integration** - Runs quietly in the background with easy access via tray icon
+- 🎨 **System tray integration** - Runs quietly in the background with easy access via tray icon
 - ⚙️ **Configurable settings** - Edit all settings via JSON config file
 - 📦 **Self-contained** - No .NET runtime installation required
 
