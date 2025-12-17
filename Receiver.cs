@@ -107,20 +107,38 @@ public class Receiver : IDisposable
                     {
                         Console.WriteLine(string.Format(Localization.Get("ReceiverProcessing"), text.Length));
                         var textToSet = text; // Capture for lambda
+                        bool clipboardSet = false;
+                        Exception? clipboardException = null;
                         var staThread = new Thread(() =>
                         {
-                            try
+                            // Retry clipboard operation up to 5 times with delays
+                            for (int attempt = 0; attempt < 5; attempt++)
                             {
-                                Clipboard.SetText(textToSet, TextDataFormat.UnicodeText);
-                            }
-                            catch
-                            {
-                                Clipboard.SetText(textToSet);
+                                try
+                                {
+                                    Clipboard.SetText(textToSet, TextDataFormat.UnicodeText);
+                                    clipboardSet = true;
+                                    break;
+                                }
+                                catch (Exception ex)
+                                {
+                                    clipboardException = ex;
+                                    if (attempt < 4)
+                                    {
+                                        Thread.Sleep(100 * (attempt + 1)); // Exponential backoff
+                                    }
+                                }
                             }
                         });
                         staThread.SetApartmentState(ApartmentState.STA);
                         staThread.Start();
                         staThread.Join();
+
+                        if (!clipboardSet)
+                        {
+                            Console.WriteLine(string.Format(Localization.Get("ReceiverClipboardError"), clipboardException?.Message));
+                            continue; // Skip notification but continue receiving
+                        }
 
                         var preview = NotificationHelper.PreviewText(text, _previewChars);
                         Console.WriteLine(string.Format(Localization.Get("ReceiverShowingNotif"), _notifications));
