@@ -12,7 +12,7 @@ if (Test-Path "publish") {
 
 # Build and publish self-contained executable
 Write-Host "Publishing self-contained release..." -ForegroundColor Cyan
-dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish\win-x64
+dotnet publish ClipShare.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish\win-x64
 
 if ($LASTEXITCODE -eq 0) {
     Write-Host "`nBuild successful!" -ForegroundColor Green
