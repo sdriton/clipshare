@@ -3,8 +3,8 @@
 
 #define MyAppName "ClipShare"
 #define MyAppVersion "1.0.0"
-#define MyAppPublisher "ClipShare"
-#define MyAppURL "https://github.com/yourusername/clipshare"
+#define MyAppPublisher "Driton Salihu"
+#define MyAppURL "https://github.com/sdriton/clipshare"
 #define MyAppExeName "clipshare.exe"
 
 [Setup]
