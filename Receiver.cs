@@ -55,6 +55,8 @@ public class Receiver : IDisposable
             catch (Exception ex)
             {
                 Console.WriteLine($"[Receiver] Start error: {ex.Message}");
+                // Display a popup notification
+                NotificationHelper.Show(_notifications, "ClipShare", $"Failed to start receiver on {_portName}: {ex.Message}");
                 _port?.Dispose();
                 _port = null;
                 throw;

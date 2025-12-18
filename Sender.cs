@@ -160,6 +160,8 @@ public class Sender : IDisposable
             catch (Exception ex)
             {
                 Console.WriteLine($"[Sender] Start error: {ex.Message}");
+                NotificationHelper.Show(_notifications, "ClipShare", $"Failed to start sender on {_portName}: {ex.Message}");
+
                 _port?.Dispose();
                 _port = null;
                 _messageWindow?.Dispose();
