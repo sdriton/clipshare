@@ -32,7 +32,7 @@ public static class Protocol
 
 public class FrameParser
 {
-    private readonly List<byte> _buffer = new();
+    private readonly List<byte> _buffer = [];
 
     public void Feed(byte[] chunk)
     {

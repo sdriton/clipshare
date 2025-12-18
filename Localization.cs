@@ -14,7 +14,7 @@ public static class Localization
         }
     }
 
-    private static Dictionary<string, string> _strings = new();
+    private static Dictionary<string, string> _strings = [];
 
     static Localization()
     {
