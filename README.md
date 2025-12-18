@@ -83,7 +83,7 @@ clipshare.exe --mode both --send-port COM1 --recv-port COM2 --baud 115200 --tray
 
 ## Configuration
 
-Configuration file is automatically created at: `%APPDATA%\ClipShare\config.json`
+Configuration file is automatically created at: `%APPDATA%\Roaming\ClipShare\clipshare-config.json`
 
 **Example configuration:**
 ```json

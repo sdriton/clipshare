@@ -60,7 +60,7 @@ public class Config
 
     public static string GetConfigPath()
     {
-        return Path.Combine(GetConfigDirectory(), "config.json");
+        return Path.Combine(GetConfigDirectory(), "clipshare-config.json");
     }
 
     public static Config Load()
