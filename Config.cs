@@ -40,8 +40,8 @@ public class Config
         return new Config
         {
             Mode = "sender",
-            SendPort = "COM3",
-            RecvPort = "COM4",
+            SendPort = "COM1",
+            RecvPort = "COM2",
             Baud = 115200,
             DelayMs = 200,
             Hotkey = "Ctrl+Shift+C",
