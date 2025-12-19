@@ -61,6 +61,7 @@ public static class Localization
             ["Language"] = "Language",
             ["EditConfig"] = "Edit Config…",
             ["ReloadConfig"] = "Reload Config",
+            ["ViewLogFile"] = "View Log File…",
             ["Exit"] = "Exit",
             
             // Tray tooltip
@@ -156,6 +157,7 @@ public static class Localization
             ["Language"] = "Langue",
             ["EditConfig"] = "Modifier la config…",
             ["ReloadConfig"] = "Recharger la config",
+            ["ViewLogFile"] = "Voir le fichier journal…",
             ["Exit"] = "Quitter",
             
             // Tray tooltip
