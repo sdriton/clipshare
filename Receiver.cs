@@ -40,7 +40,7 @@ public class Receiver : IDisposable
             {
                 _port = new SerialPort(_portName, _baud, Parity.None, 8, StopBits.One);
                 _port.Open();
-                Console.WriteLine($"[Receiver] Port {_portName} open @ {_baud} baud.");
+                Logger.Log($"[Receiver] Port {_portName} open @ {_baud} baud.");
 
                 _shouldStop = false;
                 _readThread = new Thread(ReadLoop)
@@ -54,7 +54,7 @@ public class Receiver : IDisposable
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Receiver] Start error: {ex.Message}");
+                Logger.LogError($"[Receiver] Start error: {ex.Message}");
                 // Display a popup notification
                 NotificationHelper.Show(_notifications, "ClipShare", $"Failed to start receiver on {_portName}: {ex.Message}");
                 _port?.Dispose();
@@ -107,7 +107,7 @@ public class Receiver : IDisposable
                 {
                     try
                     {
-                        Console.WriteLine(string.Format(Localization.Get("ReceiverProcessing"), text.Length));
+                        Logger.Log(string.Format(Localization.Get("ReceiverProcessing"), text.Length));
                         var textToSet = text; // Capture for lambda
                         bool clipboardSet = false;
                         Exception? clipboardException = null;
@@ -138,18 +138,18 @@ public class Receiver : IDisposable
 
                         if (!clipboardSet)
                         {
-                            Console.WriteLine(string.Format(Localization.Get("ReceiverClipboardError"), clipboardException?.Message));
+                            Logger.LogError(string.Format(Localization.Get("ReceiverClipboardError"), clipboardException?.Message));
                             continue; // Skip notification but continue receiving
                         }
 
                         var preview = NotificationHelper.PreviewText(text, _previewChars);
-                        Console.WriteLine(string.Format(Localization.Get("ReceiverShowingNotif"), _notifications));
+                        Logger.Log(string.Format(Localization.Get("ReceiverShowingNotif"), _notifications));
                         NotificationHelper.Show(_notifications, Localization.Get("NotifReceived"), $"{text.Length} {Localization.Get("NotifChars")} ← {_portName}\n{preview}");
-                        Console.WriteLine(string.Format(Localization.Get("ReceiverReceived"), text.Length));
+                        Logger.Log(string.Format(Localization.Get("ReceiverReceived"), text.Length));
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(string.Format(Localization.Get("ReceiverClipboardError"), ex.Message));
+                        Logger.LogError(string.Format(Localization.Get("ReceiverClipboardError"), ex.Message));
                         NotificationHelper.Show(_notifications, Localization.Get("NotifClipboardFailed"), string.Format(Localization.Get("ReceiverClipboardError"), ex.Message));
                     }
                 }
@@ -162,7 +162,7 @@ public class Receiver : IDisposable
             {
                 if (!_shouldStop)
                 {
-                    Console.WriteLine($"[Receiver] Serial read error: {ex.Message}");
+                    Logger.LogError($"[Receiver] Serial read error: {ex.Message}");
                     NotificationHelper.Show(_notifications, "ClipShare – Receive failed", $"Serial read error: {ex.Message}");
                     Thread.Sleep(300);
                 }

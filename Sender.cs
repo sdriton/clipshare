@@ -147,7 +147,7 @@ public class Sender : IDisposable
             {
                 _port = new SerialPort(_portName, _baud, Parity.None, 8, StopBits.One);
                 _port.Open();
-                Console.WriteLine($"[Sender] Port {_portName} open @ {_baud} baud. Hotkey: {_hotkey.Label}");
+                Logger.Log($"[Sender] Port {_portName} open @ {_baud} baud. Hotkey: {_hotkey.Label}");
 
                 _messageWindow = new HotkeyMessageWindow(OnHotkeyPressed);
                 if (!RegisterHotKey(_messageWindow.Handle, HOTKEY_ID, _hotkey.Modifiers, _hotkey.VirtualKey))
@@ -159,7 +159,7 @@ public class Sender : IDisposable
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[Sender] Start error: {ex.Message}");
+                Logger.LogError($"[Sender] Start error: {ex.Message}");
                 NotificationHelper.Show(_notifications, "ClipShare", $"Failed to start sender on {_portName}: {ex.Message}");
 
                 _port?.Dispose();
@@ -223,7 +223,7 @@ public class Sender : IDisposable
 
                 if (string.IsNullOrEmpty(text))
                 {
-                    Console.WriteLine(Localization.Get("SenderClipboardEmpty"));
+                    Logger.Log(Localization.Get("SenderClipboardEmpty"));
                     NotificationHelper.Show(_notifications, Localization.Get("NotifNothingToSend"), Localization.Get("NotifNoText"));
                     return;
                 }
@@ -233,11 +233,11 @@ public class Sender : IDisposable
 
                 var preview = NotificationHelper.PreviewText(text, _previewChars);
                 NotificationHelper.Show(_notifications, Localization.Get("NotifSent"), $"{text.Length} {Localization.Get("NotifChars")} → {_portName}\n{preview}");
-                Console.WriteLine(string.Format(Localization.Get("SenderSent"), text.Length, frame.Length));
+                Logger.Log(string.Format(Localization.Get("SenderSent"), text.Length, frame.Length));
             }
             catch (Exception ex)
             {
-                Console.WriteLine(string.Format(Localization.Get("SenderError2"), ex.Message));
+                Logger.LogError(string.Format(Localization.Get("SenderError2"), ex.Message));
                 NotificationHelper.Show(_notifications, Localization.Get("NotifSendFailed"), string.Format(Localization.Get("SenderError2"), ex.Message));
             }
         });

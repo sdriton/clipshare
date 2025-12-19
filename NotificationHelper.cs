@@ -40,7 +40,7 @@ public static class NotificationHelper
         catch (Exception ex)
         {
             // Don't crash—just log
-            Console.WriteLine($"[Toast] push error: {ex.Message}");
+            Logger.LogError($"[Toast] push error: {ex.Message}");
         }
     }
 }

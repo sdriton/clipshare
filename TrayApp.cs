@@ -40,7 +40,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Hotkey parse error ({_config.Hotkey}), falling back to Ctrl+C: {ex.Message}");
+            Logger.LogError($"[TrayApp] Hotkey parse error ({_config.Hotkey}), falling back to Ctrl+C: {ex.Message}");
             _hotkey = HotkeyParser.Parse("Ctrl+C");
         }
 
@@ -101,6 +101,7 @@ public class TrayApp : ApplicationContext
 
         _editConfigItem = new ToolStripMenuItem(Localization.Get("EditConfig"), null, OnEditConfig);
         _reloadConfigItem = new ToolStripMenuItem(Localization.Get("ReloadConfig"), null, OnReloadConfig);
+        var viewLogItem = new ToolStripMenuItem(Localization.Get("ViewLogFile"), null, OnViewLogFile);
         _exitItem = new ToolStripMenuItem(Localization.Get("Exit"), null, OnExit);
 
         _contextMenu.Items.Add(_statusItem);
@@ -117,6 +118,7 @@ public class TrayApp : ApplicationContext
         _contextMenu.Items.Add(_languageItem);
         _contextMenu.Items.Add(_editConfigItem);
         _contextMenu.Items.Add(_reloadConfigItem);
+        _contextMenu.Items.Add(viewLogItem);
         _contextMenu.Items.Add(new ToolStripSeparator());
         _contextMenu.Items.Add(_exitItem);
     }
@@ -136,7 +138,7 @@ public class TrayApp : ApplicationContext
                 _sender?.Start();
                 break;
             default:
-                Console.WriteLine($"[TrayApp] Unknown mode: {mode}");
+                Logger.LogError($"[TrayApp] Unknown mode: {mode}");
                 break;
         }
     }
@@ -169,7 +171,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Start sender error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Start sender error: {ex.Message}");
         }
         UpdateStatus();
     }
@@ -185,7 +187,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Start receiver error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Start receiver error: {ex.Message}");
         }
         UpdateStatus();
     }
@@ -200,7 +202,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Start receiver error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Start receiver error: {ex.Message}");
         }
         try
         {
@@ -208,7 +210,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Start sender error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Start sender error: {ex.Message}");
         }
         UpdateStatus();
     }
@@ -221,7 +223,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Start sender error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Start sender error: {ex.Message}");
         }
         UpdateStatus();
     }
@@ -240,7 +242,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Start receiver error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Start receiver error: {ex.Message}");
         }
         UpdateStatus();
     }
@@ -271,7 +273,7 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Open config error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Open config error: {ex.Message}");
         }
     }
 
@@ -292,7 +294,7 @@ public class TrayApp : ApplicationContext
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[TrayApp] Hotkey parse error ({_config.Hotkey}), fallback Ctrl+C: {ex.Message}");
+                Logger.LogError($"[TrayApp] Hotkey parse error ({_config.Hotkey}), fallback Ctrl+C: {ex.Message}");
                 _hotkey = HotkeyParser.Parse("Ctrl+C");
             }
 
@@ -315,7 +317,23 @@ public class TrayApp : ApplicationContext
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[TrayApp] Reload config error: {ex.Message}");
+            Logger.LogError($"[TrayApp] Reload config error: {ex.Message}");
+        }
+    }
+
+    private void OnViewLogFile(object? sender, EventArgs e)
+    {
+        try
+        {
+            var logPath = Logger.GetLogFilePath();
+            if (File.Exists(logPath))
+                System.Diagnostics.Process.Start("notepad.exe", logPath);
+            else
+                Logger.LogWarning($"[TrayApp] Log file not found: {logPath}");
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError($"[TrayApp] Open log file error: {ex.Message}");
         }
     }
 

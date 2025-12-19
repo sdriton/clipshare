@@ -87,7 +87,7 @@ public class Config
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Config] Load error: {ex.Message}");
+            Logger.LogError($"[Config] Load error: {ex.Message}");
             return Default();
         }
     }
@@ -108,7 +108,7 @@ public class Config
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Config] Save error: {ex.Message}");
+            Logger.LogError($"[Config] Save error: {ex.Message}");
         }
     }
 
@@ -121,7 +121,7 @@ public class Config
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Config] Open error: {ex.Message}");
+            Logger.LogError($"[Config] Open error: {ex.Message}");
         }
     }
 }
